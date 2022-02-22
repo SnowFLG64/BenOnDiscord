@@ -18,7 +18,7 @@ client.on('ready', () => {
   setInterval (function () {
     var srvconfig = JSON.parse(fs.readFileSync('./server_config.json'));
     action = randomactions[Math.floor(Math.random() * randomactions.length)]
-    if (newspaperstat == 'open') {
+    if (newspaperstate == 'open') {
       action = 'Newspaper'
     }
     if (action == "Newspaper") {
