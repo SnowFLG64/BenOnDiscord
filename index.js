@@ -27,7 +27,9 @@ client.on('ready', () => {
     }
   }
   serverconfig.forEach((srv) => {
-    benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
+    if (srv.benchannel != "false") {
+      benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
+    }
   })
   setInterval (function () {
     var serverconfig = JSON.parse(fs.readFileSync('./server_config.json'));
@@ -42,7 +44,9 @@ client.on('ready', () => {
       }
     }
     serverconfig.forEach((srv) => {
-      benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
+      if (srv.benchannel != "false") {
+        benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
+      }
     })
   }, 600000);
 });
