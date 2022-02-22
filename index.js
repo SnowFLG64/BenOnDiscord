@@ -16,7 +16,7 @@ client.on('ready', () => {
   client.user.setActivity(`Talking Ben`, { type: "PLAYING" })
   var newspaperstate = 'closed'
   setInterval (function () {
-    var serverconfig = JSON.parse(fs.readFileSync('./server_config.json'));
+    var srvconfig = JSON.parse(fs.readFileSync('./server_config.json'));
     action = randomactions[Math.floor(Math.random() * randomactions.length)]
     if (action == "Newspaper") {
       if (newspaperstate == 'closed') {
@@ -27,7 +27,7 @@ client.on('ready', () => {
         newspaperstate = 'closed';
       }
     }
-    serverconfig.forEach((srv) => {
+    srvconfig.forEach((srv) => {
       if (srv.benchannel != "false") {
         benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
       }
@@ -131,36 +131,36 @@ client.on('messageCreate', (message) => {
       message.channel.send(`\`b!talk <say anything>\` - Talk To Ben On Discord`);
       message.channel.send(`\`b!videos\` - Change If Ben On Discord Sends Videos Or Not`);
       message.channel.send(`\`b!benchannel <channel-id || 'unset'>\` - Set A Channel Where Ben On Discord Responds Messages And Sends Things Randomly`);
+      return;
+    } else if (serverconfig[n]["benchannel"] == message.channel.id) {
+      var saying = message.content;
+      var isBen = true;
     }
-    return;
-  } else if (serverconfig[n]["benchannel"] == message.channel.id) {
-    var saying = message.content;
-    var isBen = true;
-  }
-  if (isBen) {
-    var response = responses[Math.floor(Math.random() * responses.length)];
-    if (response == "USERMESSAGE") {
-      if (saying == "") {
-        var newresponses = responses.splice(0, responses.length - 1);
-        var response = 'No'
+    if (isBen) {
+      var response = responses[Math.floor(Math.random() * responses.length)];
+      if (response == "USERMESSAGE") {
+        if (saying == "") {
+          var newresponses = responses.splice(0, responses.length - 1);
+          var response = 'No'
+          if (serverconfig[n]["videos"] == "true") {
+            message.channel.send(`https://sparrkz.tk/dumb-files/${response}.mp4`)
+          } else {
+            message.channel.send(response);
+          }
+        }
+        message.channel.send(`*${saying}*`);
+      } else {
         if (serverconfig[n]["videos"] == "true") {
+          if (response == "Ho Ho Ho") {
+            response = "Laugh";
+          }
+          if (response == "Na Na Na Na") {
+            response = "NaNaNaNa";
+          }
           message.channel.send(`https://sparrkz.tk/dumb-files/${response}.mp4`)
         } else {
           message.channel.send(response);
         }
-      }
-      message.channel.send(`*${saying}*`);
-    } else {
-      if (serverconfig[n]["videos"] == "true") {
-        if (response == "Ho Ho Ho") {
-          response = "Laugh";
-        }
-        if (response == "Na Na Na Na") {
-          response = "NaNaNaNa";
-        }
-        message.channel.send(`https://sparrkz.tk/dumb-files/${response}.mp4`)
-      } else {
-        message.channel.send(response);
       }
     }
   }
