@@ -1,0 +1,14 @@
+{
+  "name": "ben",
+  "version": "1.0.0",
+  "description": "Ben On Discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.6.0"
+  }
+}
