@@ -25,7 +25,6 @@ client.on('ready', () => {
     }
   }
   serverconfig.forEach((srv) => {
-    console.log(srv.benchannel)
     benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
   })
   setInterval (function () {
@@ -42,7 +41,7 @@ client.on('ready', () => {
     serverconfig.forEach((srv) => {
       benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
     })
-  }, 3600000);
+  }, 1800000);
 });
 
 const responses = [
@@ -142,7 +141,7 @@ client.on('messageCreate', (message) => {
       } else {
         message.channel.send(`\`b!talk <say anything>\` - Talk To Ben On Discord`);
         message.channel.send(`\`b!videos\` - Change If Ben On Discord Sends Videos Or Not`);
-        message.channel.send(`\`b!benchannel\` <channel-id || 'unset'> - Set A Channel Where Ben On Discord Responds Messages And Sends Things Randomly`);
+        message.channel.send(`\`b!benchannel <channel-id || 'unset'>\` - Set A Channel Where Ben On Discord Responds Messages And Sends Things Randomly`);
       }
       return;
     } else if (n !== "-1" && serverconfig[n]["benchannel"] == message.channel.id) {
@@ -176,7 +175,7 @@ client.on('messageCreate', (message) => {
             message.channel.send(response);
           }
         }
-        message.channel.send(`**${saying}**`);
+        message.channel.send(`*${saying}*`);
       } else {
         if (serverconfig[n]["videos"] == "true") {
           if (response == "Ho Ho Ho") {
@@ -190,19 +189,6 @@ client.on('messageCreate', (message) => {
           message.channel.send(response);
         }
       }
-      console.log(`${message.member.user.tag} (${message.author.id}) in ${message.guild.name} (${message.guild.id}): ${message.content} ||||| Ben: ${response}`)
-      const log = JSON.parse(fs.readFileSync('./log.json'));
-      var entry = {
-        "authortag": message.member.user.tag,
-        "authorid": message.member.id,
-        "servername": message.guild.name,
-        "serverid": message.guild.id,
-        "content": message.content,
-        "ben": response
-      }
-      log.unshift(entry)
-      var newJson = JSON.stringify(log, null, 2);
-      fs.writeFileSync(`./log.json`, newJson);
     }
   }
 });
