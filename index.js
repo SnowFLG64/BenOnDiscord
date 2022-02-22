@@ -181,21 +181,6 @@ client.on('messageCreate', (message) => {
     }
     if (isBen) {
       var response = responses[Math.floor(Math.random() * responses.length)];
-      if (saying.toLowerCase().includes('are you gay')) {
-        response = 'Yes';
-      } else if (saying.toLowerCase().includes('do you love god')) {
-        response = 'No';
-      } else if (saying.toLowerCase().includes('do you support lgbtq')) {
-        response = 'No';
-      } else if (saying.toLowerCase().includes('do you support black lives matter')) {
-        response = 'Yes';
-      } else if (saying.toLowerCase() == "yes") {
-        response = 'No';
-      } else if (saying.toLowerCase() == "no") {
-        response = 'Yes';
-      } else if (saying.toLowerCase().includes('stop')) {
-        response = 'No';
-      }
       if (response == "USERMESSAGE") {
         if (saying == "") {
           var newresponses = responses.splice(0, responses.length - 1);
