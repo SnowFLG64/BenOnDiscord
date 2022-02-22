@@ -7,7 +7,8 @@ client.login(config.token);
 const randomactions = [
   "Eat",
   "Drink",
-  "Newspaper"
+  "Newspaper",
+  "Break"
 ]
 
 client.on('ready', () => { 
