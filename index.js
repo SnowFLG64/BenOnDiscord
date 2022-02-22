@@ -30,6 +30,7 @@ client.on('ready', () => {
     benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
   })
   setInterval (function () {
+    var serverconfig = JSON.parse(fs.readFileSync('./server_config.json'));
     action = randomactions[Math.floor(Math.random() * randomactions.length)]
     if (action == "Newspaper") {
       if (newspaperstate == 'closed') {
@@ -43,8 +44,16 @@ client.on('ready', () => {
     serverconfig.forEach((srv) => {
       benChannel = client.channels.fetch(srv.benchannel).then(channel => channel.send(`https://sparrkz.tk/dumb-files/${action}.mp4`))
     })
-  }, 1800000);
+  }, 600000);
 });
+
+client.on('guildDelete', (guild) => {
+  var serverconfig = JSON.parse(fs.readFileSync('./server_config.json'));
+  var n = serverconfig.findIndex(x => x.server == guild.id)
+  serverconfig.splice(n,1);
+  var newJson = JSON.stringify(serverconfig, null, 2);
+  fs.writeFileSync(`./server_config.json`, newJson);
+})
 
 const responses = [
   "Ben",
@@ -146,7 +155,8 @@ client.on('messageCreate', (message) => {
         message.channel.send(`\`b!benchannel <channel-id || 'unset'>\` - Set A Channel Where Ben On Discord Responds Messages And Sends Things Randomly`);
       }
       return;
-    } else if (n !== "-1" && serverconfig[n]["benchannel"] == message.channel.id) {
+
+    } else if (n != "-1" && serverconfig[n]["benchannel"] == message.channel.id) {
       var saying = message.content;
       var isBen = true;
     }
