@@ -13,6 +13,7 @@ const randomactions = [
 
 client.on('ready', () => { 
   console.log('Ben On Discord')
+  client.user.setActivity(`Talking Ben`, { type: "PLAYING" })
   var serverconfig = JSON.parse(fs.readFileSync('./server_config.json'));
   var newspaperstate = 'closed'
   action = randomactions[Math.floor(Math.random() * randomactions.length)]
