@@ -1,4 +1,4 @@
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, Permissions } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 const fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config.json'))
@@ -83,16 +83,21 @@ client.on('messageCreate', (message) => {
       }
     } else if (message.content.startsWith('b!setup')) {
       if (n == "-1") {
-        let entry = {
-          "server": message.guild.id,
-          "videos": "false",
-          "benchannel": "false"
+        if (message.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
+          let entry = {
+            "server": message.guild.id,
+            "videos": "false",
+            "benchannel": "false"
+          }
+          serverconfig.unshift(entry);
+          var newJson = JSON.stringify(serverconfig, null, 2);
+          fs.writeFileSync(`./server_config.json`, newJson);
+          message.channel.send('Ben On Discord');
+          return;
+        } else {
+          message.channel.send('You Do Not Have The `Manage Channels` Permission');
+          return;
         }
-        serverconfig.unshift(entry);
-        var newJson = JSON.stringify(serverconfig, null, 2);
-        fs.writeFileSync(`./server_config.json`, newJson);
-        message.channel.send('Ben On Discord');
-        return;
       } else {
         message.channel.send('Ben On Discord Already Set Up');
         return;
@@ -101,53 +106,63 @@ client.on('messageCreate', (message) => {
       if (n == "-1") {
         message.channel.send('Ben On Discord Not Set Up (b!setup)')
       } else {
-        var entry = serverconfig[n];
-        if (entry.videos == "false") {
-          var videos = "true";
-          var response = "Yes";
+        if (message.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
+          var entry = serverconfig[n];
+          if (entry.videos == "false") {
+            var videos = "true";
+            var response = "Yes";
+          } else {
+            var videos = "false";
+            var response = "No";
+          }
+          var newEntry = {
+            "server": message.guild.id,
+            "videos": videos,
+            "benchannel": serverconfig[n]["benchannel"]
+          }
+          serverconfig.splice(n,1,newEntry);
+          var newJson = JSON.stringify(serverconfig, null, 2);
+          fs.writeFileSync(`./server_config.json`, newJson);
+          if (videos == "true") {
+            message.channel.send(`https://sparrkz.tk/dumb-files/${response}.mp4`)
+          } else {
+            message.channel.send(response);
+          }
+          return;
         } else {
-          var videos = "false";
-          var response = "No";
+          message.channel.send('You Do Not Have The `Manage Channels` Permission');
+          return;
         }
-        var newEntry = {
-          "server": message.guild.id,
-          "videos": videos,
-          "benchannel": serverconfig[n]["benchannel"]
-        }
-        serverconfig.splice(n,1,newEntry);
-        var newJson = JSON.stringify(serverconfig, null, 2);
-        fs.writeFileSync(`./server_config.json`, newJson);
-        if (videos == "true") {
-          message.channel.send(`https://sparrkz.tk/dumb-files/${response}.mp4`)
-        } else {
-          message.channel.send(response);
-        }
-        return;
       }
     } else if (message.content.startsWith('b!benchannel')) {
       if (n == "-1") {
         message.channel.send('Ben On Discord Not Set Up (b!setup)')
       } else {
-        var rmstring = `b!benchannel`;
-        var channelid = message.content.substring(rmstring.length + 1);
-        if (channelid == "") {
-          channelid = message.channel.id;
-        }
-        if (channelid == "unset") {
-          channelid = "false";
-        }
-        var newEntry = {
-          "server": message.guild.id,
-          "videos": serverconfig[n]["videos"],
-          "benchannel": channelid
-        }
-        serverconfig.splice(n,1,newEntry);
-        var newJson = JSON.stringify(serverconfig, null, 2);
-        fs.writeFileSync(`./server_config.json`, newJson);
-        if (serverconfig[n]["videos"] == "true") {
-          message.channel.send(`https://sparrkz.tk/dumb-files/Yes.mp4`)
+        if (message.member.permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) {
+          var rmstring = `b!benchannel`;
+          var channelid = message.content.substring(rmstring.length + 1);
+          if (channelid == "") {
+            channelid = message.channel.id;
+          }
+          if (channelid == "unset") {
+            channelid = "false";
+          }
+          var newEntry = {
+            "server": message.guild.id,
+            "videos": serverconfig[n]["videos"],
+            "benchannel": channelid
+          }
+          serverconfig.splice(n,1,newEntry);
+          var newJson = JSON.stringify(serverconfig, null, 2);
+          fs.writeFileSync(`./server_config.json`, newJson);
+          if (serverconfig[n]["videos"] == "true") {
+            message.channel.send(`https://sparrkz.tk/dumb-files/Yes.mp4`)
+          } else {
+            message.channel.send('Yes');
+          }
         } else {
-          message.channel.send('Yes');
+          message.channel.send('You Do Not Have The `Manage Channels` Permission');
+          return;
         }
       }
     } else if ((message.content.startsWith('b!help')) || (message.mentions.has(client.user) && message.content.includes('help'))) {
